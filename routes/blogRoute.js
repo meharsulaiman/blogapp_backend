@@ -12,13 +12,14 @@ router.get('/test', checkAuth, async (req, res) => {
 
 router.post('/', checkAuth, async (req, res, next) => {
   try {
-    const { title, description, image, paragraphs } = req.body;
+    const { title, description, image, paragraphs, category } = req.body;
     const blog = await Blog.create({
       title,
       description,
       image,
       paragraphs,
       owner: req.userId,
+      category,
     });
 
     const user = await User.findById(req.userId);
@@ -94,9 +95,12 @@ router.delete('/:id', checkAuth, checkOwnerShip, async (req, res, next) => {
         message: 'User not found',
       });
     }
-    // TODO: Not Working
-    user.blogs.pull(req.params.id);
-    await user.save();
+
+    const blogIndex = user.blogs.indexOf(req.params.id);
+    if (blogIndex !== -1) {
+      user.blogs.splice(blogIndex, 1);
+      await user.save();
+    }
 
     res.status(200).json({
       message: 'Blog deleted successfully',

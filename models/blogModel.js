@@ -38,6 +38,10 @@ const blogSchema = new mongoose.Schema(
       ref: 'User',
       required: [true, 'Please provide an owner'],
     },
+    category: {
+      type: String,
+      required: [true, 'Please provide a category'],
+    },
   },
   {
     timestamps: true,

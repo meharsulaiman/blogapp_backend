@@ -2,6 +2,7 @@ const express = require('express');
 const User = require('../models/userSchema');
 const errorHandler = require('../middlewares/errorMiddleware');
 const bcrypt = require('bcrypt');
+const checkAuth = require('../middlewares/checkAuth');
 
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
@@ -97,6 +98,10 @@ router.post('/send-otp', async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+});
+
+router.get('/checklogin', checkAuth, async (req, res, next) => {
+  res.json({ message: 'Login Successfully' });
 });
 
 module.exports = router;
